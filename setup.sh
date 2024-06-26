@@ -19,6 +19,10 @@ error_exit() {
     exit 1
 }
 
+# Disable swap
+sudo swapoff -a || error_exit "Failed to disable swap"
+sudo sed -i.bak '/swap/d' /etc/fstab || error_exit "Failed to remove swap entry from /etc/fstab"
+
 # Load necessary kernel modules
 cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
 overlay
